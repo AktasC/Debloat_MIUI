@@ -1,0 +1,34 @@
+#!/usr/bin/busybox sh
+# Please don't use this script if you don't know what you're doing
+
+## Backup Directory
+BACKUP_DIR="./backup"
+
+## Array of applications to remove
+APPS="system/app/nique
+system/app/la
+system/app/peau
+system/app/lisse
+system/app/je suis suisse
+"
+
+## Listing function
+list() {
+  printf "%s" "$1" | sed -e "/^#/ d; /^$/d;"
+}
+
+## Simple backup function using tar from busybox
+backup() {
+  mkdir -p "$BACKUP_DIR"
+  2>/dev/null busybox tar -cv -f backup2.tar -T -
+}
+
+## Cleanup function removing any file or folder listed in APPS array
+cleanup() {
+  while read file; do
+    rm -v "$file"
+  done
+}
+
+## Execution
+list "$APPS" | backup | cleanup
